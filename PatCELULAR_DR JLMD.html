@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patología Celular - Universidad Antonio Nariño</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --sidebar-width: 250px;
+            --transition-time: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            transition: margin-left var(--transition-time);
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 60px;
+            margin-right: 15px;
+        }
+        
+        .header-title h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-title p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        #menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: var(--dark-color);
+            color: white;
+            transform: translateX(-100%);
+            transition: transform var(--transition-time);
+            z-index: 1000;
+            padding-top: 80px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu li a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar-menu li a.active {
+            background-color: var(--accent-color);
+        }
+        
+        .sidebar-footer {
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-logo {
+            width: 80%;
+            max-width: 150px;
+            margin: 0 auto;
+            display: block;
+            padding: 1rem 0;
+        }
+        
+        .university-name {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        main {
+            padding: 2rem;
+            margin-left: 0;
+            transition: margin-left var(--transition-time);
+        }
+        
+        main.sidebar-active {
+            margin-left: var(--sidebar-width);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .motivation-box {
+            background-color: #e8f4fc;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .motivation-box h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .ai-resources {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .ai-card {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .ai-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ai-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .ai-card p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .ai-card a {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .ai-card a:hover {
+            background-color: #2980b9;
+        }
+        
+        .ai-type {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (min-width: 992px) {
+            #sidebar {
+                transform: translateX(0);
+            }
+            
+            main {
+                margin-left: var(--sidebar-width);
+            }
+            
+            #menu-toggle {
+                display: none;
+            }
+            
+            .overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="                                                                                                                     .JPG" alt="Logo Universidad Antonio Nari" class="logo">
+            <div class="header-title">
+                <h1>Patología Celular_DR JORGE-MONROY, Esp-MSc</h1>
+                <p>Facultad de Medicina - Universidad Antonio Nariño</p>
+            </div>
+        </div>
+        <button id="menu-toggle">☰</button>
+    </header>
+    
+    <div id="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="#introduccion" class="active">Introducción</a></li>
+            <li><a href="#conceptos-basicos">Conceptos Básicos</a></li>
+            <li><a href="#lesion-celular">Lesión Celular</a></li>
+            <li><a href="#cambios-estructurales">Cambios Estructurales y Funcionales</a></li>
+            <li><a href="#muerte-celular">Procesos de Muerte Celular</a></li>
+            <li><a href="#senalizacion">Señalización y Respuestas Adaptativas</a></li>
+            <li><a href="#recursos-ia">Recursos de IA</a></li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <img src="c:\Users\Jorge Monrroy\Desktop\JORGELMD\A-Desktop-JLMD\AA.JORGELMD\PATO-5-uan-MED-1\0-LOGO-UAN\Logo UAN.JPG" alt="Logo Universidad Antonio Nariño" class="sidebar-logo">
+            <div class="university-name">Universidad Antonio Nariño</div>
+        </div>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <main>
+        <!-- Las secciones del contenido permanecen igual que en el código anterior -->
+        <!-- Introducción, Conceptos Básicos, Lesión Celular, etc. -->
+        
+        <section id="introduccion">
+            <h2>Introducción a la Patología Celular</h2>
+            <p>La patología celular es el estudio de las alteraciones estructurales y funcionales que ocurren en las células como respuesta a estímulos nocivos. Estas alteraciones pueden ser reversibles o irreversibles y son la base de las enfermedades.</p>
+            
+            <div class="motivation-box">
+                <h3>¿Por qué estudiar patología celular?</h3>
+                <p>Comprender los cambios celulares es fundamental para:</p>
+                <ul>
+                    <li>Diagnosticar enfermedades con precisión</li>
+                    <li>Desarrollar tratamientos efectivos</li>
+                    <li>Prevenir daños tisulares</li>
+                    <li>Avanzar en la medicina personalizada</li>
+                </ul>
+                <p>Como estudiante de medicina, este conocimiento será la base para entender la fisiopatología de las enfermedades que verás en tu práctica clínica.</p>
+            </div>
+            
+            <h3>Objetivos del curso</h3>
+            <ul>
+                <li>Identificar los tipos de lesiones celulares</li>
+                <li>Comprender los mecanismos de adaptación celular</li>
+                <li>Diferenciar entre necrosis y apoptosis</li>
+                <li>Analizar las respuestas celulares al estrés</li>
+            </ul>
+        </section>
+        
+        <!-- Resto de las secciones... -->
+        
+        <section id="conceptos-basicos">
+            <h2>Conceptos Básicos</h2>
+            <p>La célula es la unidad básica de la vida y su estudio es esencial para comprender la salud y la enfermedad. En condiciones normales, las células mantienen un estado de homeostasis.</p>
+            
+            <h3>Componentes celulares clave</h3>
+            <ul>
+                <li><strong>Núcleo:</strong> Contiene el material genético y controla las actividades celulares</li>
+                <li><strong>Mitocondrias:</strong> Centrales energéticas de la célula</li>
+                <li><strong>Retículo endoplásmico:</strong> Síntesis de proteínas y lípidos</li>
+                <li><strong>Aparato de Golgi:</strong> Procesamiento y empaquetamiento de moléculas</li>
+                <li><strong>Lisosomas:</strong> Digestión intracelular</li>
+                <li><strong>Membrana plasmática:</strong> Barrera selectiva que regula el intercambio</li>
+            </ul>
+            
+            <div class="motivation-box">
+                <h3>Reflexión</h3>
+                <p>Imagina cada célula como una ciudad microscópica donde cada orgánulo tiene una función específica. Cuando un sistema falla, toda la "ciudad" sufre las consecuencias. Tu labor como futuro médico será identificar estas "fallas urbanas" celulares y restaurar el orden.</p>
+            </div>
+        </section>
+        
+        <section id="lesion-celular">
+            <h2>Lesión Celular</h2>
+            <p>La lesión celular ocurre cuando las células son sometidas a estrés tan severo que no pueden adaptarse, o cuando son expuestas a agentes nocivos de manera aguda o crónica.</p>
+            
+            <h3>Causas de lesión celular</h3>
+            <ul>
+                <li><strong>Hipoxia:</strong> Deficiencia de oxígeno (ej. isquemia)</li>
+                <li><strong>Agentes físicos:</strong> Trauma, temperaturas extremas, radiación</li>
+                <li><strong>Agentes químicos:</strong> Toxinas, drogas, alcohol</li>
+                <li><strong>Agentes infecciosos:</strong> Virus, bacterias, parásitos</li>
+                <li><strong>Reacciones inmunológicas:</strong> Autoinmunidad, hipersensibilidad</li>
+                <li><strong>Defectos genéticos:</strong> Errores metabólicos congénitos</li>
+                <li><strong>Desequilibrios nutricionales:</strong> Deficiencias o excesos</li>
+            </ul>
+            
+            <h3>Mecanismos de lesión celular</h3>
+            <ol>
+                <li>Pérdida de producción de ATP</li>
+                <li>Daño mitocondrial</li>
+                <li>Entrada de calcio intracelular</li>
+                <li>Acumulación de especies reactivas de oxígeno</li>
+                <li>Defectos en la permeabilidad de membrana</li>
+                <li>Daño al ADN y proteínas</li>
+            </ol>
+        </section>
+        
+        <section id="cambios-estructurales">
+            <h2>Cambios Estructurales y Funcionales</h2>
+            <p>Las células pueden presentar diversos cambios en respuesta a estímulos patológicos, algunos de los cuales son adaptativos y otros indican daño irreversible.</p>
+            
+            <h3>Cambios adaptativos</h3>
+            <ul>
+                <li><strong>Atrofia:</strong> Disminución del tamaño celular</li>
+                <li><strong>Hipertrofia:</strong> Aumento del tamaño celular</li>
+                <li><strong>Hiperplasia:</strong> Aumento del número de células</li>
+                <li><strong>Metaplasia:</strong> Transformación de un tipo celular en otro</li>
+                <li><strong>Displasia:</strong> Alteración en el tamaño, forma y organización celular</li>
+            </ul>
+            
+            <h3>Cambios degenerativos</h3>
+            <ul>
+                <li><strong>Degeneración hidrópica:</strong> Acumulación de agua</li>
+                <li><strong>Esteatosis:</strong> Acumulación de lípidos</li>
+                <li><strong>Cambios hialinos:</strong> Acumulación de proteínas</li>
+                <li><strong>Depósitos de calcio:</strong> Calcificación distrófica o metastásica</li>
+            </ul>
+            
+            <div class="motivation-box">
+                <h3>Analogía clínica</h3>
+                <p>Piensa en estos cambios como las diferentes formas en que el cuerpo intenta lidiar con el estrés. Al igual que una persona puede adaptarse al estrés laboral (trabajando más horas o delegando tareas), las células también tienen sus mecanismos de adaptación. Tu desafío será distinguir cuándo estos cambios son beneficiosos y cuándo son perjudiciales.</p>
+            </div>
+        </section>
+        
+        <section id="muerte-celular">
+            <h2>Procesos de Muerte Celular</h2>
+            <p>La muerte celular es un evento crítico en la patología, ocurriendo principalmente por necrosis (no programada) o apoptosis (programada).</p>
+            
+            <h3>Necrosis</h3>
+            <p>Muerte celular patológica caracterizada por:</p>
+            <ul>
+                <li>Hinchazón celular y ruptura de orgánulos</li>
+                <li>Liberación de contenido celular que causa inflamación</li>
+                <li>Tipos: coagulativa, licuefactiva, caseosa, grasa, fibrinosa, gangrenosa</li>
+            </ul>
+            
+            <h3>Apoptosis</h3>
+            <p>Muerte celular programada caracterizada por:</p>
+            <ul>
+                <li>Encogimiento celular y condensación de cromatina</li>
+                <li>Formación de cuerpos apoptóticos</li>
+                <li>Fagocitosis sin inflamación</li>
+                <li>Activada por vía intrínseca (mitocondrial) o extrínseca (receptores de muerte)</li>
+            </ul>
+            
+            <h3>Otras formas de muerte celular</h3>
+            <ul>
+                <li><strong>Piroptosis:</strong> Inflamatoria, asociada a infecciones</li>
+                <li><strong>Ferroptosis:</strong> Dependiente de hierro y peroxidación lipídica</li>
+                <li><strong>Autofagia:</strong> Autodigestión celular</li>
+            </ul>
+        </section>
+        
+        <section id="senalizacion">
+            <h2>Señalización y Respuestas Adaptativas</h2>
+            <p>Las células reciben constantemente señales de su entorno y responden de manera adaptativa o patológica.</p>
+            
+            <h3>Vías de señalización importantes</h3>
+            <ul>
+                <li><strong>Receptores de superficie:</strong> GPCRs, receptores tirosina quinasa</li>
+                <li><strong>Segundos mensajeros:</strong> AMPc, Ca2+, IP3, DAG</li>
+                <li><strong>Vías de transducción:</strong> MAPK, PI3K/Akt, JAK/STAT</li>
+                <li><strong>Factores de transcripción:</strong> NF-κB, p53, HIF-1α</li>
+            </ul>
+            
+            <h3>Respuestas al estrés celular</h3>
+            <ul>
+                <li><strong>Respuesta a proteínas desplegadas (UPR):</strong> En retículo endoplásmico</li>
+                <li><strong>Respuesta a daño en ADN:</strong> Activación de p53</li>
+                <li><strong>Respuesta a estrés oxidativo:</strong> Activación de Nrf2</li>
+                <li><strong>Respuesta inflamatoria:</strong> Activación de NF-κB</li>
+            </ul>
+            
+            <div class="motivation-box">
+                <h3>Perspectiva clínica</h3>
+                <p>El conocimiento de estas vías de señalización es crucial para el desarrollo de terapias dirigidas. Muchos medicamentos modernos actúan específicamente sobre estos mecanismos moleculares. Como futuro médico, estarás en la primera línea de aplicación de estos avances terapéuticos.</p>
+            </div>
+        </section>
+        
+        <section id="recursos-ia">
+            <h2>Recursos de Inteligencia Artificial para Patología Celular</h2>
+            <p>Las herramientas de IA pueden ser de gran ayuda en el estudio de la patología celular. Aquí te presentamos algunas opciones útiles:</p>
+            
+            <div class="ai-resources">
+                <div class="ai-card">
+                    <span class="ai-type">TEXTO</span>
+                    <h3>ChatGPT</h3>
+                    <p>Asistente de IA para generar explicaciones, resúmenes y responder preguntas sobre patología celular.</p>
+                    <a href="https://chat.openai.com" target="_blank">Acceder</a>
+                </div>
+                
+                <div class="ai-card">
+                    <span class="ai-type">IMÁGENES</span>
+                    <h3>MidJourney</h3>
+                    <p>Genera imágenes detalladas de células, tejidos y procesos patológicos para apoyo visual en el estudio.</p>
+                    <a href="https://www.midjourney.com" target="_blank">Acceder</a>
+                </div>
+                
+                <div class="ai-card">
+                    <span class="ai-type">CÓDIGO</span>
+                    <h3>GitHub Copilot</h3>
+                    <p>Asistente para programación útil si desarrollas simulaciones o análisis de datos en patología.</p>
+                    <a href="https://github.com/features/copilot" target="_blank">Acceder</a>
+                </div>
+                
+                <div class="ai-card">
+                    <span class="ai-type">VIDEO</span>
+                    <h3>Synthesia</h3>
+                    <p>Crea videos educativos con avatares digitales explicando conceptos de patología celular.</p>
+                    <a href="https://www.synthesia.io" target="_blank">Acceder</a>
+                </div>
+                
+                <div class="ai-card">
+                    <span class="ai-type">INVESTIGACIÓN</span>
+                    <h3>Elicit</h3>
+                    <p>Asistente de investigación que ayuda a encontrar y resumir artículos científicos sobre patología.</p>
+                    <a href="https://elicit.org" target="_blank">Acceder</a>
+                </div>
+                
+                <div class="ai-card">
+                    <span class="ai-type">DIAGRAMAS</span>
+                    <h3>Diagrams.net</h3>
+                    <p>Herramienta para crear diagramas de procesos celulares y vías de señalización.</p>
+                    <a href="https://www.diagrams.net" target="_blank">Acceder</a>
+                </div>
+            </div>
+            
+            <div class="motivation-box">
+                <h3>Uso responsable de la IA</h3>
+                <p>Estas herramientas son excelentes complementos para tu aprendizaje, pero recuerda que no sustituyen el estudio crítico ni el razonamiento clínico. Úsalas para:</p>
+                <ul>
+                    <li>Generar resúmenes y esquemas</li>
+                    <li>Crear material de estudio visual</li>
+                    <li>Aclarar conceptos complejos</li>
+                    <li>Practicar con preguntas y casos clínicos</li>
+                </ul>
+                <p>Siempre verifica la información con fuentes académicas confiables.</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2025 Universidad Antonio Nariño - Facultad de Medicina</p>
+        <p>Patología Celular - Todos los derechos reservados</p>
+    </footer>
+    
+    <script>
+        // Menú lateral interactivo
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.overlay');
+        const mainContent = document.querySelector('main');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            mainContent.classList.toggle('sidebar-active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            mainContent.classList.remove('sidebar-active');
+        });
+        
+        // Cambiar clase activa en el menú
+        const menuItems = document.querySelectorAll('.sidebar-menu li a');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Prevenir comportamiento predeterminado solo si es un enlace interno
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    // Desplazamiento suave
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Cerrar menú en móviles
+                    if (window.innerWidth < 992) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                        mainContent.classList.remove('sidebar-active');
+                    }
+                }
+                
+                // Actualizar elemento activo
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Actualizar elemento activo al hacer scroll
+        window.addEventListener('scroll', () => {
+            const fromTop = window.scrollY + 100;
+            
+            menuItems.forEach(item => {
+                const section = document.querySelector(item.getAttribute('href'));
+                
+                if (
+                    section.offsetTop <= fromTop &&
+                    section.offsetTop + section.offsetHeight > fromTop
+                ) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
